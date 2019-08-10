@@ -1,0 +1,21 @@
+.switch-wrapper {
+  position: relative;
+}
+ 
+.switch-wrapper > div {
+  position: absolute;
+}
+
+.route-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.route-wrapper > div {
+  width: 100%;
+  position: absolute;
+}
+
+.test {
+  min-width: 100% !important;
+}
