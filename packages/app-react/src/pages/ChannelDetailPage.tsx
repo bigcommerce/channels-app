@@ -13,23 +13,37 @@ import { SiteView } from "../components/sites/SiteView";
 import { RoutesListView } from "../components/sites/RoutesListView";
 
 import { Site } from "../models/Site";
+import { ChannelsContextProvider, ChannelsContext } from "../components/base/ChannelContext";
+import { useEffect } from "react";
+import useAxios from "axios-hooks";
 
 export interface ChannelDetailPageProps extends RouteComponentProps {
-  // channel: Channel
 }
 
 export const ChannelDetailPage: React.FC<ChannelDetailPageProps> = props => {
-  const [activeTab, setActiveTab] = React.useState("channel_details");
-
   let channel: Channel = props.location.state.channel;
 
-  const mockSite: Site = {
-    id: 1,
-    url: "https://www.my-awesome-site.com",
-    channel_id: 18735,
-    created_at: "2019-08-05T18:26:21Z",
-    updated_at: "2019-08-05T18:26:21Z"
-  };
+    // TODO Move to API Layer
+  const [{ data, loading, error }, refetch] = useAxios({
+    url: `https://focused-torvalds-8d8f01.netlify.com/.netlify/functions/bigcommerce_channels_channel?channel_id=${channel.id}`,
+    method: "GET",
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json"
+    }
+  });
+
+  const channelsContext = React.useContext(ChannelsContext)
+
+  React.useMemo(
+    () => {
+      console.log(JSON.stringify(data))
+      if (data) {
+        channelsContext.setActiveChannel(data.data)
+      }
+    },
+    [data]
+  );
 
   return (
     <Box marginVertical="xxLarge" marginHorizontal="xxxLarge">
@@ -43,11 +57,11 @@ export const ChannelDetailPage: React.FC<ChannelDetailPageProps> = props => {
                 </Link>
               </Flex.Item>
               <Flex.Item marginHorizontal="small">
-                <H1>/</H1>
+                {channelsContext.activeChannel ? <H1>/</H1> : ""}
               </Flex.Item>
 
               <Flex.Item>
-                <H1>{channel.name}</H1>
+                {channelsContext.activeChannel ? <H1>{channelsContext.activeChannel.name}</H1> : ""}
               </Flex.Item>
             </Flex>
           </Box>
@@ -57,14 +71,20 @@ export const ChannelDetailPage: React.FC<ChannelDetailPageProps> = props => {
 
       <Box marginTop="large">
         <Panel>
-          <ChannelDetailView channelData={channel} />
+
+          {data ? <ChannelDetailView /> : ""}
         </Panel>
-        <Panel>
-          <SiteView siteData={mockSite} />
-        </Panel>
-        <Panel>
-          <RoutesListView siteData={mockSite} />
-        </Panel>
+
+        {channel.type === "storefront" ?
+          <Box>
+            <Panel>
+              <SiteView channelData={channel} />
+            </Panel>
+            {/* <Panel>
+              <RoutesListView siteData={mockSite} />
+            </Panel> */}
+          </Box>
+          : ""}
       </Box>
     </Box>
   );

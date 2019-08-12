@@ -7,7 +7,6 @@ import {
   Flex,
   H1
 } from "@bigcommerce/big-design";
-import { PropagateLoader } from "react-spinners";
 
 interface ErrorProps {
   message: string

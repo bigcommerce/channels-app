@@ -33,51 +33,59 @@ interface Type {
 export const ChannelCreateModal: React.FC<
   ChannelEditModalProperties
 > = props => {
-  const [enabled, setEnabled] = React.useState();
+  const [enabled, setEnabled] = React.useState(false);
   const [name, setName] = React.useState();
   const [externalId, setExternalId] = React.useState();
   const [channelType, setChannelType] = React.useState();
   const [channelPlatform, setChannelPlatform] = React.useState();
+  const [url, setUrl] = React.useState();
+
+
+  const clear = () => {
+    setEnabled(false)
+    setName("")
+    setExternalId("")
+    setChannelType("")
+    setChannelPlatform("")
+    setUrl("")
+
+  }
 
   const applyAction = async () => {
-    
+
     try {
       const result = await Axios({
-        url: "https://sampleapp.ngrok.io/bigcommerce/channels/",
+        url: "https://focused-torvalds-8d8f01.netlify.com/.netlify/functions/bigcommerce_channels/",
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
         },
         method: "POST",
         data: {
-          firstName: "Fred",
-          lastName: "Flintstone"
+          channel_name: name,
+          external_id: externalId,
+          channel_type: channelType,
+          channel_platform: channelPlatform,
+          enabled: enabled,
+          url: url
         }
       });
 
       console.log(JSON.stringify(result))
 
+      clear()
+      props.closeAction(true);
+
     } catch (err) {
+      clear()
+      props.closeAction(false);
       console.log(err);
     }
-    //   const name: HTMLInputElement | null = nameRef.current;
-    //   const externalId: HTMLInputElement | null = externalIdRef.current;
 
-    //   if (name !== null) {
-    //     console.log(name["value"]);
-    //   }
 
-    //   if (externalId !== null) {
-    //     console.log(externalId["value"]);
-    //   }
-
-    //   props.closeAction();
   };
 
-  let [type, setType] = React.useState("storefront");
-  let [platform, setPlatform] = React.useState();
-
-  // TODO make this stored in firestore
+  // TODO move this to db?
   // TODO icon links?
 
   let types: { [key: string]: Type } = {
@@ -129,8 +137,9 @@ export const ChannelCreateModal: React.FC<
   };
 
   const renderPlatform = () => {
-    if (type) {
-      return types[type].platforms.map((p: SelectOption) => {
+    console.log(channelType)
+    if (channelType) {
+      return types[channelType].platforms.map((p: SelectOption) => {
         return (
           <Select.Option key={p.value} value={p.value}>
             {p.label}
@@ -150,7 +159,7 @@ export const ChannelCreateModal: React.FC<
       }}
       closeOnEscKey={true}
       closeOnClickOutside={false}
-      
+
     >
       <Modal.Header>Channel Details</Modal.Header>
 
@@ -159,10 +168,10 @@ export const ChannelCreateModal: React.FC<
           <Form>
             <Form.Fieldset>
               <Form.Row>
-                <Input label="Channel Name" placeholder="" />
+                <Input label="Channel Name" placeholder="" value={name} onChange={e => setName(e.target.value)} />
               </Form.Row>
               <Form.Row>
-                <Input label="External Id" placeholder="" />
+                <Input label="External Id" placeholder="" value={externalId} onChange={e => setExternalId(e.target.value)} />
               </Form.Row>
 
               <Form.Row>
@@ -170,40 +179,34 @@ export const ChannelCreateModal: React.FC<
                   label="Channel Type"
                   onActionClick={inputText => inputText}
                   onItemChange={(selectedValue: string) =>
-                    setType(selectedValue)
+                    setChannelType(selectedValue)
                   }
                   placeholder={"Choose Type"}
-                  value={type}
+                  value={channelType}
                 >
                   {renderTypes()}
                 </Select>
 
                 <Select
                   label="Channel Platform"
-                  // maxHeight={number("maxHeight", 300)}
                   onActionClick={inputText => inputText}
                   onItemChange={(selectedValue: string) =>
-                    setPlatform(selectedValue)
+                    setChannelPlatform(selectedValue)
                   }
                   placeholder={
-                    type === undefined ? "Choose Type" : "Choose Platform"
+                    channelType === undefined ? "Choose Type" : "Choose Platform"
                   }
-                  // placement={select("placement", placement, "bottom-start")}
-                  value={platform}
+                  value={channelPlatform}
                 >
                   {renderPlatform()}
                 </Select>
               </Form.Row>
 
-              <Form.Row>
-                
-              </Form.Row>
-
-              <Form.Fieldset>
+              {channelType === "storefront" ? <Form.Fieldset>
                 <Form.Row>
-                  <Input label="URL/Domain" placeholder="" />
+                  <Input label="URL/Domain" placeholder="" value={url} onChange={e => setUrl(e.target.value)} />
                 </Form.Row>
-              </Form.Fieldset>
+              </Form.Fieldset> : ""}
 
               <Form.Fieldset legend="Status">
                 <Form.Row>
@@ -224,7 +227,7 @@ export const ChannelCreateModal: React.FC<
           marginHorizontal="xxSmall"
           variant="subtle"
           onClick={() => {
-            props.closeAction();
+            props.closeAction(false);
           }}
           marginBottom="xSmall"
         >
