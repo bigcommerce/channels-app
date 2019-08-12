@@ -1,0 +1,17 @@
+[build]
+    base = "packages/app-react"
+    publish = "packages/app-react/build"
+    command = "yarn build"
+
+    functions = "packages/functions-netlify/build"
+
+[dev]
+    command = "yarn start" 
+    port = 3000
+    publish = "packages/app-react/build" # If you use a _redirect file, provide the path to your static content folder
+
+[[headers]]
+    for = "*.js" # js files should be set this way
+    [headers.values]
+        cache-control = "max-age=0,no-cache,no-store,must-revalidate"
+    
