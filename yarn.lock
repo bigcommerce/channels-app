@@ -731,10 +731,24 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@bigcommerce/big-design@github:ncheikh/big-design-release#master":
-  version "0.5.0"
-  resolved "git+ssh://git@github.com/ncheikh/big-design-release.git#48355c0c3ceae996036794ba081c87ef3042bba2"
+"@bigcommerce/big-design-icons@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@bigcommerce/big-design-icons/-/big-design-icons-0.1.1.tgz#0beb622180cbff121682a985d47875a7e3755b7e"
   dependencies:
+    "@bigcommerce/big-design-theme" "^0.1.1"
+
+"@bigcommerce/big-design-theme@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@bigcommerce/big-design-theme/-/big-design-theme-0.1.1.tgz#9b43f08f6a933e59f32503ecf481afa556470326"
+  dependencies:
+    polished "^3.0.3"
+
+"@bigcommerce/big-design@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@bigcommerce/big-design/-/big-design-0.6.2.tgz#57ff5e3da6b8cd33657a79fcba079dbb86634992"
+  dependencies:
+    "@bigcommerce/big-design-icons" "^0.1.1"
+    "@bigcommerce/big-design-theme" "^0.1.1"
     "@types/hoist-non-react-statics" "^3.3.0"
     downshift "^3.2.7"
     hoist-non-react-statics "^3.3.0"
