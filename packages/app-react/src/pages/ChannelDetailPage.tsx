@@ -48,7 +48,7 @@ export const ChannelDetailPage: React.FC<ChannelDetailPageProps> = props => {
   return (
     <Box marginVertical="xxLarge" marginHorizontal="xxxLarge">
       <Flex justifyContent="left">
-        <Flex.Item grow={1}>
+        <Flex.Item flexGrow={1}>
           <Box marginTop="medium">
             <Flex>
               <Flex.Item>

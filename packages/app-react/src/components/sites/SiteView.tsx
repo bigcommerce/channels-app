@@ -8,20 +8,12 @@ import {
   Flex,
   H1,
   Button,
-  PlusIcon,
-  Panel,
-  H2,
-  H4,
   Form,
   Input
 } from "@bigcommerce/big-design";
 
-import { Site } from "../../models/Site";
-
 import { Loader } from "../../components/base/Loader";
-import { Error } from "../../components/base/Error";
 import { Channel } from "../../models/Channel";
-import { useContext } from "react";
 import { ChannelsContext } from "../base/ChannelContext";
 import { useEffect } from "react";
 
@@ -81,7 +73,7 @@ export const SiteView: React.FC<SiteViewProps> = props => {
   return (
     <Box>
       <Flex justifyContent="left" alignItems="center">
-        <Flex.Item grow={1}>
+        <Flex.Item flexGrow={1}>
           <Box marginTop="medium">
             <H1>Site</H1>
           </Box>
@@ -101,17 +93,17 @@ export const SiteView: React.FC<SiteViewProps> = props => {
       {channelsContext.activeSite && !channelsContext.siteLoading ?
         <Form>
           <Form.Fieldset>
-            <Form.Row>
+            <Form.Group>
               <Input label="Site Id" value={channelsContext.activeSite.id} disabled />
               <Input label="Channel Id" value={channelsContext.activeSite.channel_id} disabled />
-            </Form.Row>
-            <Form.Row>
+            </Form.Group>
+            <Form.Group>
               <Input label="URL/Domain" value={url} onChange={e => setUrl(e.target.value)} disabled={!editEnabled} />
-            </Form.Row>
-            <Form.Row>
+            </Form.Group>
+            <Form.Group>
               <Input label="Created At" value={channelsContext.activeSite.created_at} disabled />
               <Input label="Modified At" value={channelsContext.activeSite.updated_at} disabled />
-            </Form.Row>
+            </Form.Group>
           </Form.Fieldset>
         </Form>
         : ""}

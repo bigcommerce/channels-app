@@ -8,8 +8,10 @@ import {
   Flex,
   H1,
   Button,
-  PlusIcon
 } from "@bigcommerce/big-design";
+
+import { AddIcon } from '@bigcommerce/big-design-icons';
+
 import { Loader } from "../components/base/Loader";
 import { Error } from "../components/base/Error";
 
@@ -49,7 +51,7 @@ export const ChannelListPage: React.FC = () => {
   return (
     <Box marginVertical="xxLarge" marginHorizontal="xxxLarge">
       <Flex justifyContent="left" alignItems="center">
-        <Flex.Item grow={1}>
+        <Flex.Item flexGrow={1}>
           <Box marginTop="medium">
             <H1>Channels</H1>
           </Box>
@@ -62,7 +64,7 @@ export const ChannelListPage: React.FC = () => {
                 setCreateChannelOpen(true);
               }}
             >
-              <PlusIcon /> Create Channel
+              <AddIcon /> Create Channel
                   </Button>
           </Box>
         </Flex.Item>

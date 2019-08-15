@@ -5,11 +5,13 @@ import {
   Flex,
   H1,
   Button,
-  PlusIcon,
   Panel,
   H2,
   H4
 } from "@bigcommerce/big-design";
+
+import { AddIcon } from '@bigcommerce/big-design-icons';
+
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
@@ -60,7 +62,7 @@ export const RoutesListView: React.FC<RoutesListViewProps> = props => {
                 {route.matching}
               </Box>
             </Flex.Item> */}
-            <Flex.Item margin="small" grow={1}>
+            <Flex.Item margin="small" flexGrow={1}>
               <Box style={{ lineHeight: "36px" }}>{route.route}</Box>
             </Flex.Item>
 
@@ -102,14 +104,14 @@ export const RoutesListView: React.FC<RoutesListViewProps> = props => {
   return (
     <Box>
       <Flex justifyContent="left" alignItems="center">
-          <Flex.Item grow={1}>
+          <Flex.Item flexGrow={1}>
             <Box marginTop="medium">
               <H1>Routes</H1>
             </Box>
           </Flex.Item>
           <Flex.Item>
             <Box>
-              <Button variant="secondary"> <PlusIcon /> Create Route</Button>
+              <Button variant="secondary"> <AddIcon /> Create Route</Button>
             </Box>
           </Flex.Item>
         </Flex>
@@ -126,7 +128,7 @@ export const RoutesListView: React.FC<RoutesListViewProps> = props => {
         {/* <Flex.Item margin="small">
           <Box style={{ lineHeight: "36px", width: "100px" }}><H4>Matching</H4></Box>
         </Flex.Item> */}
-        <Flex.Item margin="small" grow={1}>
+        <Flex.Item margin="small" flexGrow={1}>
           <Box style={{ lineHeight: "36px" }}><H4>Route</H4></Box>
         </Flex.Item>
       </Flex>

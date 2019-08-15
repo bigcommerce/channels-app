@@ -15,7 +15,7 @@ interface ErrorProps {
 export const Error: React.FC<ErrorProps> = (props) => {
   return (
     <Box marginVertical="xxLarge" marginHorizontal="xxxLarge">
-      <Flex  justifyContent="center" alignItems="center" direction="column">
+      <Flex  justifyContent="center" alignItems="center" flexDirection="column">
         <Flex.Item marginVertical="xxxLarge">
           <img width="50%" style={{marginLeft: '25%', marginRight: '25%'}} src={image} />
         </Flex.Item>
