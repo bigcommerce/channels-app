@@ -167,14 +167,14 @@ export const SiteCreateModal: React.FC<
         <Box margin="large">
           <Form>
             <Form.Fieldset>
-              <Form.Row>
+              <Form.Group>
                 <Input label="Channel Name" placeholder="" value={name} onChange={e => setName(e.target.value)} />
-              </Form.Row>
-              <Form.Row>
+              </Form.Group>
+              <Form.Group>
                 <Input label="External Id" placeholder="" value={externalId} onChange={e => setExternalId(e.target.value)} />
-              </Form.Row>
+              </Form.Group>
 
-              <Form.Row>
+              <Form.Group>
                 <Select
                   label="Channel Type"
                   onActionClick={inputText => inputText}
@@ -200,22 +200,22 @@ export const SiteCreateModal: React.FC<
                 >
                   {renderPlatform()}
                 </Select>
-              </Form.Row>
+              </Form.Group>
 
               {channelType === "storefront" ? <Form.Fieldset>
-                <Form.Row>
+                <Form.Group>
                   <Input label="URL/Domain" placeholder="" value={url} onChange={e => setUrl(e.target.value)} />
-                </Form.Row>
+                </Form.Group>
               </Form.Fieldset> : ""}
 
               <Form.Fieldset legend="Status">
-                <Form.Row>
+                <Form.Group>
                   <Checkbox
                     label="Enabled"
                     onChange={() => setEnabled(!enabled)}
                     checked={enabled}
                   />
-                </Form.Row>
+                </Form.Group>
               </Form.Fieldset>
             </Form.Fieldset>
           </Form>

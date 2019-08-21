@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Box, Flex, Panel, H2, Button, Lozenge } from "@bigcommerce/big-design";
+import { Box, Flex, Panel, H2, Button, Badge } from "@bigcommerce/big-design";
 
 import useAxios from "axios-hooks";
 
@@ -68,11 +68,11 @@ export const ChannelList: React.FC<ChannelListProperties> = props => {
             <Flex.Item margin="small">
               <img height="24" src={logo} alt="Storefront Channel Logo Image" />
             </Flex.Item>
-            <Flex.Item margin="small" style={{ minWidth: "200px" }} grow={channel.type === "storefront" ? 0 : 1}>
+            <Flex.Item margin="small" style={{ minWidth: "200px" }} flexGrow={channel.type === "storefront" ? 0 : 1}>
               <Box style={{ lineHeight: "36px" }}>{channel.name}</Box>{" "}
             </Flex.Item>
 
-            {channel.type === "storefront" ? <Flex.Item margin="small" grow={1}>
+            {channel.type === "storefront" ? <Flex.Item margin="small" flexGrow={1}>
               {/* {siteLoading ? <Loader size={10} color="#3C64F4" />
                 : ""}
               {siteData ? <Loader size={10} color="#3C64F4" />
@@ -81,9 +81,9 @@ export const ChannelList: React.FC<ChannelListProperties> = props => {
 
             <Flex.Item marginHorizontal="medium">
               {channel.is_enabled ? (
-                <Lozenge variant="success">Active</Lozenge>
+                <Badge variant="success">Active</Badge>
               ) : (
-                  <Lozenge variant="secondary">Inactive</Lozenge>
+                  <Badge variant="secondary">Inactive</Badge>
                 )}
             </Flex.Item>
 

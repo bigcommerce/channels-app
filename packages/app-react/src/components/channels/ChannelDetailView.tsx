@@ -13,7 +13,6 @@ import {
   Flex,
   H2,
   H1,
-  PlusIcon,
   Checkbox
 } from "@bigcommerce/big-design";
 
@@ -98,7 +97,7 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
   return (
     <Box>
       <Flex justifyContent="left" alignItems="center">
-        <Flex.Item grow={1}>
+        <Flex.Item flexGrow={1}>
           <Box marginTop="medium">
             <H1>Channels</H1>
           </Box>
@@ -117,29 +116,29 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
       {channelsContext.activeChannel && !channelsContext.channelLoading ?
         <Form>
           <Form.Fieldset>
-            <Form.Row>
+            <Form.Group>
               <Input
                 label="Channel Name"
                 disabled={!editEnabled}
                 value={name}
                 onChange={e => setName(e.target.value)}
               />
-            </Form.Row>
-            <Form.Row>
+            </Form.Group>
+            <Form.Group>
               <Input
                 label="Channel Platform"
                 value={channelsContext.activeChannel.platform}
                 disabled
               />
-            </Form.Row>
-            <Form.Row>
+            </Form.Group>
+            <Form.Group>
               <Input
                 label="Channel Type"
                 value={channelsContext.activeChannel.type}
                 disabled
               />
-            </Form.Row>
-            <Form.Row>
+            </Form.Group>
+            <Form.Group>
               <Input label="Channel Id" value={channelsContext.activeChannel.id} disabled />
               <Input
                 label="External Id"
@@ -148,7 +147,7 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
                 disabled={!editEnabled}
               />
               <Form.Fieldset legend="Status">
-                <Form.Row>
+                <Form.Group>
                   <Checkbox
                     label="Enabled"
                     checked={enabled}
@@ -156,11 +155,11 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
                       if (editEnabled) setEnabled(!enabled)
                     }}
                   />
-                </Form.Row>
+                </Form.Group>
               </Form.Fieldset>
-            </Form.Row>
+            </Form.Group>
 
-            <Form.Row>
+            <Form.Group>
 
               <Input
                 label="Created At"
@@ -172,9 +171,9 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
                 value={channelsContext.activeChannel.date_modified}
                 disabled
               />
-            </Form.Row>
+            </Form.Group>
 
-            <Form.Row />
+            <Form.Group />
           </Form.Fieldset>
         </Form>
         : ""}

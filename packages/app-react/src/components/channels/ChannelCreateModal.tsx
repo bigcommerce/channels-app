@@ -9,9 +9,6 @@ import {
   Select
 } from "@bigcommerce/big-design";
 
-import { Channel } from "../../models/Channel";
-import { string } from "prop-types";
-import useAxios from "axios-hooks";
 import Axios from "axios";
 
 
@@ -167,14 +164,14 @@ export const ChannelCreateModal: React.FC<
         <Box margin="large">
           <Form>
             <Form.Fieldset>
-              <Form.Row>
+              <Form.Group>
                 <Input label="Channel Name" placeholder="" value={name} onChange={e => setName(e.target.value)} />
-              </Form.Row>
-              <Form.Row>
+              </Form.Group>
+              <Form.Group>
                 <Input label="External Id" placeholder="" value={externalId} onChange={e => setExternalId(e.target.value)} />
-              </Form.Row>
+              </Form.Group>
 
-              <Form.Row>
+              <Form.Group>
                 <Select
                   label="Channel Type"
                   onActionClick={inputText => inputText}
@@ -200,22 +197,22 @@ export const ChannelCreateModal: React.FC<
                 >
                   {renderPlatform()}
                 </Select>
-              </Form.Row>
+              </Form.Group>
 
               {channelType === "storefront" ? <Form.Fieldset>
-                <Form.Row>
+                <Form.Group>
                   <Input label="URL/Domain" placeholder="" value={url} onChange={e => setUrl(e.target.value)} />
-                </Form.Row>
+                </Form.Group>
               </Form.Fieldset> : ""}
 
               <Form.Fieldset legend="Status">
-                <Form.Row>
+                <Form.Group>
                   <Checkbox
                     label="Enabled"
                     onChange={() => setEnabled(!enabled)}
                     checked={enabled}
                   />
-                </Form.Row>
+                </Form.Group>
               </Form.Fieldset>
             </Form.Fieldset>
           </Form>
