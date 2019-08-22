@@ -19,6 +19,9 @@ const bigCommerce = new BigCommerce({
 });
 
 exports.handler = async (event, context, callback) => {
+    console.log(process.env.URL)
+
+
     try {
         const payload = bigCommerce.verify(event.queryStringParameters.signed_payload)
        
@@ -31,7 +34,7 @@ exports.handler = async (event, context, callback) => {
                 statusCode: 302,
                 headers: {
                     'Access-Control-Allow-Origin': '*',
-                    'Location': process.env.URL
+                    'Location': "https://channelsappdev.ngrok.io/"
                 },
                 body: ""
             }
@@ -42,7 +45,7 @@ exports.handler = async (event, context, callback) => {
                     'Access-Control-Allow-Origin': '*',
                     'Cache-Control': 'no-cache',
                     'Set-Cookie': auth.generateCookie(storeData.store_hash, storeData.access_token),
-                    'Location': process.env.URL
+                    'Location': "https://channelsappdev.ngrok.io/"
                 },
                 body: ""
             }

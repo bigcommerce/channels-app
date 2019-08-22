@@ -1,8 +1,5 @@
 import * as React from "react";
 
-import axios from "axios";
-import useAxios from "axios-hooks";
-
 import {
   Box,
   Flex

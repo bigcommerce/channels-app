@@ -1,4 +1,7 @@
 import * as React from "react";
+
+import Async from "react-async";
+
 import {
   Modal,
   Button,
@@ -6,11 +9,10 @@ import {
   Input,
   Box,
   Checkbox,
-  Select
+  Select,
+  ProgressCircle
 } from "@bigcommerce/big-design";
-
-import Axios from "axios";
-
+import { ChannelsAPI, SitesAPI } from "../../api";
 
 interface ChannelEditModalProperties {
   isOpen: boolean;
@@ -30,61 +32,50 @@ interface Type {
 export const ChannelCreateModal: React.FC<
   ChannelEditModalProperties
 > = props => {
-  const [enabled, setEnabled] = React.useState(false);
-  const [name, setName] = React.useState();
-  const [externalId, setExternalId] = React.useState();
-  const [channelType, setChannelType] = React.useState();
-  const [channelPlatform, setChannelPlatform] = React.useState();
-  const [url, setUrl] = React.useState();
-
+  const [enabled, setEnabled] = React.useState<boolean>(false);
+  const [name, setName] = React.useState<string>("");
+  const [externalId, setExternalId] = React.useState<string>("");
+  const [channelType, setChannelType] = React.useState<string>("");
+  const [channelPlatform, setChannelPlatform] = React.useState<string>("");
+  const [url, setUrl] = React.useState<string>("");
 
   const clear = () => {
-    setEnabled(false)
-    setName("")
-    setExternalId("")
-    setChannelType("")
-    setChannelPlatform("")
-    setUrl("")
-
-  }
-
-  const applyAction = async () => {
-
-    try {
-      const result = await Axios({
-        url: "https://focused-torvalds-8d8f01.netlify.com/.netlify/functions/bigcommerce_channels/",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        method: "POST",
-        data: {
-          channel_name: name,
-          external_id: externalId,
-          channel_type: channelType,
-          channel_platform: channelPlatform,
-          enabled: enabled,
-          url: url
-        }
-      });
-
-      console.log(JSON.stringify(result))
-
-      clear()
-      props.closeAction(true);
-
-    } catch (err) {
-      clear()
-      props.closeAction(false);
-      console.log(err);
-    }
-
-
+    setEnabled(false);
+    setName("");
+    setExternalId("");
+    setChannelType("");
+    setChannelPlatform("");
+    setUrl("");
   };
 
-  // TODO move this to db?
-  // TODO icon links?
+  const applyAction = async () => {
+    try {
+      const channel = await ChannelsAPI.createChannel(
+        name,
+        externalId,
+        channelType,
+        channelPlatform,
+        enabled
+      );
 
+      if (url) {
+        console.log(JSON.stringify(channel));
+
+        await SitesAPI.createSite(channel.id, url);
+      }
+
+      clear();
+      props.closeAction(true);
+    } catch (err) {
+      clear();
+      props.closeAction(false);
+
+      console.log(err);
+      return err;
+    }
+  };
+
+  // TODO icon links
   let types: { [key: string]: Type } = {
     pos: {
       select: { value: "pos", label: "Point Of Sale (POS)" },
@@ -123,7 +114,6 @@ export const ChannelCreateModal: React.FC<
   };
 
   const renderTypes = () => {
-    console.log(JSON.stringify(types));
     return Object.values(types).map((t: Type) => {
       return (
         <Select.Option key={t.select.value} value={t.select.value}>
@@ -134,7 +124,6 @@ export const ChannelCreateModal: React.FC<
   };
 
   const renderPlatform = () => {
-    console.log(channelType)
     if (channelType) {
       return types[channelType].platforms.map((p: SelectOption) => {
         return (
@@ -149,97 +138,126 @@ export const ChannelCreateModal: React.FC<
   };
 
   return (
-    <Modal
-      isOpen={props.isOpen}
-      onClose={() => {
-        props.closeAction();
-      }}
-      closeOnEscKey={true}
-      closeOnClickOutside={false}
-
-    >
-      <Modal.Header>Channel Details</Modal.Header>
-
-      <Modal.Body>
-        <Box margin="large">
-          <Form>
-            <Form.Fieldset>
-              <Form.Group>
-                <Input label="Channel Name" placeholder="" value={name} onChange={e => setName(e.target.value)} />
-              </Form.Group>
-              <Form.Group>
-                <Input label="External Id" placeholder="" value={externalId} onChange={e => setExternalId(e.target.value)} />
-              </Form.Group>
-
-              <Form.Group>
-                <Select
-                  label="Channel Type"
-                  onActionClick={inputText => inputText}
-                  onItemChange={(selectedValue: string) =>
-                    setChannelType(selectedValue)
-                  }
-                  placeholder={"Choose Type"}
-                  value={channelType}
-                >
-                  {renderTypes()}
-                </Select>
-
-                <Select
-                  label="Channel Platform"
-                  onActionClick={inputText => inputText}
-                  onItemChange={(selectedValue: string) =>
-                    setChannelPlatform(selectedValue)
-                  }
-                  placeholder={
-                    channelType === undefined ? "Choose Type" : "Choose Platform"
-                  }
-                  value={channelPlatform}
-                >
-                  {renderPlatform()}
-                </Select>
-              </Form.Group>
-
-              {channelType === "storefront" ? <Form.Fieldset>
-                <Form.Group>
-                  <Input label="URL/Domain" placeholder="" value={url} onChange={e => setUrl(e.target.value)} />
-                </Form.Group>
-              </Form.Fieldset> : ""}
-
-              <Form.Fieldset legend="Status">
-                <Form.Group>
-                  <Checkbox
-                    label="Enabled"
-                    onChange={() => setEnabled(!enabled)}
-                    checked={enabled}
-                  />
-                </Form.Group>
-              </Form.Fieldset>
-            </Form.Fieldset>
-          </Form>
-        </Box>
-      </Modal.Body>
-
-      <Modal.Actions>
-        <Button
-          marginHorizontal="xxSmall"
-          variant="subtle"
-          onClick={() => {
-            props.closeAction(false);
+    <Async deferFn={applyAction}>
+      {({ error, isLoading, run }) => (
+        <Modal
+          isOpen={props.isOpen}
+          onClose={() => {
+            props.closeAction();
           }}
-          marginBottom="xSmall"
+          closeOnEscKey={true}
+          closeOnClickOutside={false}
         >
-          Close
-        </Button>
+          <Modal.Header>Channel Details</Modal.Header>
 
-        <Button
-          marginHorizontal="xxSmall"
-          onClick={() => {
-            applyAction();
-          }}
-        >
-          Save
-        </Button>
-      </Modal.Actions>
-    </Modal>
+          <Modal.Body>
+            <Box margin="large">
+              <Form>
+                <Form.Fieldset>
+                  <Form.Group>
+                    <Input
+                      label="Channel Name"
+                      placeholder=""
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      disabled={isLoading}
+                    />
+                  </Form.Group>
+                  <Form.Group>
+                    <Input
+                      label="External Id"
+                      placeholder=""
+                      value={externalId}
+                      onChange={e => setExternalId(e.target.value)}
+                      disabled={isLoading}
+                    />
+                  </Form.Group>
+
+                  <Form.Group>
+                    <Select
+                      label="Channel Type"
+                      onActionClick={inputText => inputText}
+                      onItemChange={(selectedValue: string) =>
+                        setChannelType(selectedValue)
+                      }
+                      placeholder={"Choose Type"}
+                      value={channelType}
+                      disabled={isLoading}
+                    >
+                      {renderTypes()}
+                    </Select>
+
+                    <Select
+                      label="Channel Platform"
+                      onActionClick={inputText => inputText}
+                      onItemChange={(selectedValue: string) =>
+                        setChannelPlatform(selectedValue)
+                      }
+                      placeholder={
+                        channelType === undefined
+                          ? "Choose Type"
+                          : "Choose Platform"
+                      }
+                      value={channelPlatform}
+                      disabled={isLoading}
+                    >
+                      {renderPlatform()}
+                    </Select>
+                  </Form.Group>
+
+                  {channelType === "storefront" ? (
+                    <Form.Fieldset>
+                      <Form.Group>
+                        <Input
+                          label="URL/Domain"
+                          placeholder=""
+                          value={url}
+                          onChange={e => setUrl(e.target.value)}
+                          disabled={isLoading}
+                        />
+                      </Form.Group>
+                    </Form.Fieldset>
+                  ) : (
+                    ""
+                  )}
+
+                  <Form.Fieldset legend="Status">
+                    <Form.Group>
+                      <Checkbox
+                        label="Enabled"
+                        onChange={() => setEnabled(!enabled)}
+                        checked={enabled}
+                        disabled={isLoading}
+                      />
+                    </Form.Group>
+                  </Form.Fieldset>
+                </Form.Fieldset>
+              </Form>
+            </Box>
+          </Modal.Body>
+
+          <Modal.Actions>
+            <Button
+              marginHorizontal="xxSmall"
+              variant="subtle"
+              onClick={() => {
+                props.closeAction(false);
+              }}
+              marginBottom="xSmall"
+            >
+              Close
+            </Button>
+
+            <Button
+              marginHorizontal="xxSmall"
+              onClick={run}
+              disabled={isLoading}
+            >
+              {isLoading ? <ProgressCircle size={"xSmall"} /> : "Save"}
+            </Button>
+          </Modal.Actions>
+        </Modal>
+      )}
+    </Async>
   );
 };

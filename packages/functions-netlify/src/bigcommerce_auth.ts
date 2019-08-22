@@ -21,6 +21,13 @@ const bigCommerce = new BigCommerce({
 });
 
 exports.handler = async (event, context, callback) => {
+    console.log(process.env.BC_CLIENT_ID)
+    console.log(process.env.BC_CLIENT_SECRET)
+    console.log(process.env.BC_CALLBACK)
+    console.log(process.env.URL)
+
+
+
     try {
         const authorizationData: interfaces.AuthResponse = await bigCommerce.authorize(event.queryStringParameters)
 

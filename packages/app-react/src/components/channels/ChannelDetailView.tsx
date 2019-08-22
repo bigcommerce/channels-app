@@ -1,119 +1,100 @@
 import * as React from "react";
 
-import axios from "axios";
-import useAxios from "axios-hooks";
-
 import {
-  Modal,
   Button,
   Form,
   Input,
   Box,
-  Panel,
   Flex,
-  H2,
   H1,
   Checkbox
 } from "@bigcommerce/big-design";
 
 import { Loader } from "../../components/base/Loader";
-import { Error } from "../../components/base/Error";
-
 
 import { Channel } from "../../models/Channel";
-import { useEffect } from "react";
-import { useContext } from "react";
-import { ChannelsContext } from "../base/ChannelContext";
+import { ChannelsAPI } from "../../api";
+import { useMemo } from "react";
 
 interface ChannelDetailViewProps {
-  // channelData: Channel;
-  // refetch: Function
+  channel: Channel;
+  isLoading: boolean;
+  saveAction: Function;
 }
 
 export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
-
-  const channelsContext = React.useContext(ChannelsContext)
-
   const [editEnabled, setEditEnabled] = React.useState(false);
 
   const [enabled, setEnabled] = React.useState();
   const [name, setName] = React.useState();
   const [externalId, setExternalId] = React.useState();
 
-  useEffect(() => {
-    if (channelsContext.activeChannel && !editEnabled) {
-      setEnabled(channelsContext.activeChannel.is_enabled)
-      setName(channelsContext.activeChannel.name)
-      setExternalId(channelsContext.activeChannel.external_id)
+  useMemo(() => {
+    if (props.channel) {
+      setEnabled(props.channel.is_enabled);
+      setName(props.channel.name);
+      setExternalId(props.channel.external_id);
     }
-  });
-
-
-  React.useMemo(
-    () => {
-      if (channelsContext.activeChannel) {
-        setEnabled(channelsContext.activeChannel.is_enabled)
-        setName(channelsContext.activeChannel.name)
-        setExternalId(channelsContext.activeChannel.external_id)
-      }
-    },
-    [channelsContext.activeChannel]
-  );
+  }, [props.channel]);
 
   const enableEdit = () => {
-    setEditEnabled(true)
-  }
+    setEditEnabled(true);
+  };
 
   const cancelEdit = () => {
-    if (channelsContext.activeChannel) {
-      setEnabled(channelsContext.activeChannel.is_enabled)
-      setName(channelsContext.activeChannel.name)
-      setExternalId(channelsContext.activeChannel.external_id)
-    }
+    setEnabled(props.channel.is_enabled);
+    setName(props.channel.name);
+    setExternalId(props.channel.external_id);
 
-    setEditEnabled(false)
-  }
+    setEditEnabled(false);
+  };
 
   const saveEdit = async () => {
     try {
-      if (channelsContext.activeChannel) {
-        channelsContext.updateChannel(
-          name,
-          externalId,
-          channelsContext.activeChannel.id,
-          enabled
-        )
-      }
+      await ChannelsAPI.updateChannel(
+        props.channel.id,
+        name,
+        externalId,
+        enabled
+      );
 
-      setEditEnabled(false)
+      props.saveAction(true);
 
+      setEditEnabled(false);
     } catch (err) {
       console.log(err);
-      setEditEnabled(false)
+      setEditEnabled(false);
     }
-  }
-
+  };
 
   return (
     <Box>
       <Flex justifyContent="left" alignItems="center">
         <Flex.Item flexGrow={1}>
           <Box marginTop="medium">
-            <H1>Channels</H1>
+            <H1>Channel Details</H1>
           </Box>
         </Flex.Item>
         <Flex.Item>
           <Box>
-            {editEnabled ? <Box>
-              <Button margin="small" variant="secondary" onClick={cancelEdit}>Cancel</Button>
-              <Button onClick={saveEdit}>Save</Button></Box> :
-              <Button variant="secondary" onClick={enableEdit}>Edit</Button>}
+            {editEnabled ? (
+              <Box>
+                <Button margin="small" variant="secondary" onClick={cancelEdit}>
+                  Cancel
+                </Button>
+                <Button onClick={saveEdit}>Save</Button>
+              </Box>
+            ) : (
+              <Button variant="secondary" onClick={enableEdit}>
+                Edit
+              </Button>
+            )}
           </Box>
         </Flex.Item>
       </Flex>
 
-      {channelsContext.channelLoading ? <Loader height="250px" /> : ""}
-      {channelsContext.activeChannel && !channelsContext.channelLoading ?
+      {props.isLoading ? <Loader height="250px" /> : ""}
+      {!props.isLoading && props.channel ? (
         <Form>
           <Form.Fieldset>
             <Form.Group>
@@ -127,19 +108,15 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
             <Form.Group>
               <Input
                 label="Channel Platform"
-                value={channelsContext.activeChannel.platform}
+                value={props.channel.platform}
                 disabled
               />
             </Form.Group>
             <Form.Group>
-              <Input
-                label="Channel Type"
-                value={channelsContext.activeChannel.type}
-                disabled
-              />
+              <Input label="Channel Type" value={props.channel.type} disabled />
             </Form.Group>
             <Form.Group>
-              <Input label="Channel Id" value={channelsContext.activeChannel.id} disabled />
+              <Input label="Channel Id" value={props.channel.id} disabled />
               <Input
                 label="External Id"
                 value={externalId}
@@ -152,7 +129,7 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
                     label="Enabled"
                     checked={enabled}
                     onChange={_ => {
-                      if (editEnabled) setEnabled(!enabled)
+                      if (editEnabled) setEnabled(!enabled);
                     }}
                   />
                 </Form.Group>
@@ -160,15 +137,14 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
             </Form.Group>
 
             <Form.Group>
-
               <Input
                 label="Created At"
-                value={channelsContext.activeChannel.date_created}
+                value={props.channel.date_created}
                 disabled
               />
               <Input
                 label="Modified At"
-                value={channelsContext.activeChannel.date_modified}
+                value={props.channel.date_modified}
                 disabled
               />
             </Form.Group>
@@ -176,7 +152,9 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
             <Form.Group />
           </Form.Fieldset>
         </Form>
-        : ""}
+      ) : (
+        ""
+      )}
     </Box>
   );
 };
