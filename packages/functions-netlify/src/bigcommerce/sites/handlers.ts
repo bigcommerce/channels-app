@@ -27,9 +27,6 @@ export async function RootHandler(event, bigCommerce) {
   }
 
   if (event.httpMethod === "DELETE") {
-    console.log("asdfasdf");
-    console.log(event.queryStringParameters.site_id);
-
     const data = await siteRepo.deleteSite(
       bigCommerce,
       event.queryStringParameters.site_id
