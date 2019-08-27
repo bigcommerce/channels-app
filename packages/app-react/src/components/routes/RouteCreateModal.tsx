@@ -1,17 +1,13 @@
 import * as React from "react";
 
-import Async from "react-async";
-
 import {
   Modal,
   Button,
   Form,
   Input,
   Box,
-  Select,
-  ProgressCircle
+  Select
 } from "@bigcommerce/big-design";
-import { RoutesAPI } from "../../api";
 
 import { RouteTypeSelections, SelectOption } from "../../models/Route";
 
@@ -34,7 +30,7 @@ export const RouteCreateModal: React.FC<RouteCreateModalProperties> = props => {
 
   const applyAction = async () => {
     props.applyAction(type, matching, route);
-    clear()
+    clear();
   };
 
   const renderTypes = () => {
