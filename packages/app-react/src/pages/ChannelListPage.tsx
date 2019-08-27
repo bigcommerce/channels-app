@@ -6,6 +6,7 @@ import { Box, Flex, H1, Button } from "@bigcommerce/big-design";
 import { AddIcon } from "@bigcommerce/big-design-icons";
 
 import { ChannelsAPI, SitesAPI } from "../api";
+
 import { ChannelList } from "../components/channels/ChannelList";
 import { ChannelCreateModal } from "../components/channels/ChannelCreateModal";
 
@@ -35,6 +36,7 @@ export const ChannelListPage: React.FC = () => {
   };
 
   return (
+
     <Box marginVertical="xxLarge" marginHorizontal="xxxLarge">
       <Flex justifyContent="left" alignItems="center">
         <Flex.Item flexGrow={1}>
@@ -62,7 +64,7 @@ export const ChannelListPage: React.FC = () => {
             isChannelsLoading={isLoading}
             isSitesLoading={isSitesLoading}
             channels={data.data}
-            sites={sitesData.data.length > 0 ? sitesData.data : []}
+            sites={sitesData && sitesData.data && sitesData.data.length > 0 ? sitesData.data : []}
           />
         ) : (
           <ChannelList

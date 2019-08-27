@@ -8,6 +8,10 @@ export function fetchSite(bigCommerceClient, siteId: number) {
     return bigCommerceClient.get(`/sites/${siteId}`)
 }
 
+export function fetchSiteByChannel(bigCommerceClient, channelId: number) {
+    return bigCommerceClient.get(`/channels/${channelId}/site`)
+}
+
 export async function createSite(bigCommerceClient, channelId: string, url: string) {
     const requestPayload: SitePostRequestPayload = {
         url: url,

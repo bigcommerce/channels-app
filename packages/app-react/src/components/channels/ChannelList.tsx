@@ -12,6 +12,7 @@ import {
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
+import { OpenInNewIcon } from "@bigcommerce/big-design-icons";
 
 import { Channel } from "../../models/Channel";
 
@@ -20,7 +21,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { Loader } from "../base/Loader";
 import { Site } from "../../models/Site";
-import { OpenInNewIcon } from "@bigcommerce/big-design-icons";
+import { useChannelContext } from "../../contexts/ChannelContext";
 
 interface ChannelListProperties {
   channels: Array<Channel>;
@@ -30,6 +31,8 @@ interface ChannelListProperties {
   isSitesLoading: boolean;
 }
 export const ChannelList: React.FC<ChannelListProperties> = props => {
+  const channelContext = useChannelContext();
+
   const filterByType = (list: Array<Channel>, type: string): Array<Channel> => {
     return list.reduce((accum: Array<Channel>, ele: Channel) => {
       if (ele.type === type) {
@@ -93,6 +96,7 @@ export const ChannelList: React.FC<ChannelListProperties> = props => {
 
             <Flex.Item marginHorizontal="large">
               <RouterLink
+                onClick={() => channelContext.fetchData(channel.id)}
                 to={{
                   pathname: "/channel/",
                   state: {

@@ -1,15 +1,31 @@
 import * as React from "react";
 
-import { Box, Flex, H1, Button, Form, Input } from "@bigcommerce/big-design";
+import { useMemo } from "react";
+
+import {
+  Box,
+  Flex,
+  H1,
+  Link,
+  Text,
+  Button,
+  Form,
+  Input,
+  ProgressCircle,
+  Dropdown
+} from "@bigcommerce/big-design";
 
 import { Loader } from "../../components/base/Loader";
 import { Site } from "../../models/Site";
 import { SitesAPI } from "../../api";
-import { useMemo } from "react";
+
+import { SiteCreateModal } from "./SiteCreateModal";
+import { SiteDeleteModal } from "./SiteDeleteModal";
+
+import { useChannelContext } from "../../contexts/ChannelContext";
+import { MoreHorizIcon } from "@bigcommerce/big-design-icons";
 
 interface SiteViewProps {
-  site: Site;
-  isLoading: boolean;
   saveAction: Function;
 }
 
@@ -18,11 +34,16 @@ export const SiteView: React.FC<SiteViewProps> = props => {
 
   const [url, setUrl] = React.useState();
 
+  const [isCreateOpen, setCreateOpen] = React.useState(false);
+  const [isDeleteOpen, setDeleteOpen] = React.useState(false);
+
+  const channelContext = useChannelContext();
+
   useMemo(() => {
-    if (props.site) {
-      setUrl(props.site.url);
+    if (channelContext.site) {
+      setUrl(channelContext.site.url);
     }
-  }, [props.site]);
+  }, [channelContext.site]);
 
   const enableEdit = () => {
     setEditEnabled(true);
@@ -34,9 +55,7 @@ export const SiteView: React.FC<SiteViewProps> = props => {
 
   const saveEdit = async () => {
     try {
-      await SitesAPI.updateSite(props.site.id, url);
-
-      props.saveAction(true);
+      await channelContext.updateSite(url);
 
       setEditEnabled(false);
     } catch (err) {
@@ -45,72 +64,121 @@ export const SiteView: React.FC<SiteViewProps> = props => {
     }
   };
 
+  const createChannel = async (actionTaken: boolean) => {
+    props.saveAction(actionTaken);
+    setCreateOpen(false);
+  };
+
+  const cancelDelete = () => {
+    setDeleteOpen(false);
+  };
+
+  const applyDelete = () => {
+    channelContext.deleteSite();
+
+    setDeleteOpen(false);
+  };
+
   return (
     <Box>
-      <Flex justifyContent="left" alignItems="center">
-        <Flex.Item flexGrow={1}>
-          <Box marginTop="medium">
-            <H1>Site Details</H1>
-          </Box>
-        </Flex.Item>
-        <Flex.Item>
-          <Box>
-            {!props.site ? (
-              <Button variant="secondary">Create</Button>
-            ) : editEnabled ? (
-              <Box>
-                <Button margin="small" variant="secondary" onClick={cancelEdit}>
-                  Cancel
+      <Box>
+        <Flex justifyContent="left" alignItems="center">
+          <Flex.Item flexGrow={1}>
+            <Box marginTop="medium">
+              <H1>Site Details</H1>
+            </Box>
+          </Flex.Item>
+          <Flex.Item>
+            <Box>
+              {!channelContext.isSiteLoading && !channelContext.site ? (
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setCreateOpen(true);
+                  }}
+                >
+                  Create
                 </Button>
-                <Button onClick={saveEdit}>Save</Button>
-              </Box>
-            ) : (
-              <Button variant="secondary" onClick={enableEdit}>
-                Edit
-              </Button>
-            )}
-          </Box>
-        </Flex.Item>
-      </Flex>
+              ) : editEnabled ? (
+                <Box>
+                  {!channelContext.isChannelLoading ? (
+                    <Button
+                      margin="small"
+                      variant="secondary"
+                      onClick={cancelEdit}
+                      disabled={channelContext.isChannelLoading}
+                    >
+                      Cancel
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                  <Button onClick={saveEdit}>
+                    {channelContext.isChannelLoading ? (
+                      <ProgressCircle size={"xSmall"} />
+                    ) : (
+                      "Save"
+                    )}
+                  </Button>
+                </Box>
+              ) : (
+                <Button variant="secondary" onClick={enableEdit}>
+                  Edit
+                </Button>
+              )}
+            </Box>
+          </Flex.Item>
+        </Flex>
 
-      {props.isLoading ? <Loader height="150px" /> : ""}
+        {channelContext.isSiteLoading ? <Loader height="150px" /> : ""}
 
-      {!props.isLoading && props.site ? (
-        <Form>
-          <Form.Fieldset>
-            <Form.Group>
-              <Input label="Site Id" value={props.site.id} disabled />
-              <Input
-                label="Channel Id"
-                value={props.site.channel_id}
-                disabled
-              />
-            </Form.Group>
-            <Form.Group>
-              <Input
-                label="URL/Domain"
-                value={url}
-                onChange={e => setUrl(e.target.value)}
-                disabled={!editEnabled}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Input
-                label="Created At"
-                value={props.site.created_at}
-                disabled
-              />
-              <Input
-                label="Modified At"
-                value={props.site.updated_at}
-                disabled
-              />
-            </Form.Group>
-          </Form.Fieldset>
-        </Form>
-      ) : (
-        ""
-      )}
+        {!channelContext.isSiteLoading && channelContext.site ? (
+          <Form>
+            <Form.Fieldset>
+              <Form.Group>
+                <Input
+                  label="Site Id"
+                  value={channelContext.site.id}
+                  disabled
+                />
+                <Input
+                  label="Channel Id"
+                  value={channelContext.site.channel_id}
+                  disabled
+                />
+              </Form.Group>
+              <Form.Group>
+                <Input
+                  label="URL/Domain"
+                  value={url}
+                  onChange={e => setUrl(e.target.value)}
+                  disabled={!editEnabled}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Input
+                  label="Created At"
+                  value={channelContext.site.created_at}
+                  disabled
+                />
+                <Input
+                  label="Modified At"
+                  value={channelContext.site.updated_at}
+                  disabled
+                />
+              </Form.Group>
+            </Form.Fieldset>
+          </Form>
+        ) : (
+          ""
+        )}
+
+        <SiteCreateModal
+          channelId={12}
+          isOpen={isCreateOpen}
+          closeAction={createChannel}
+        />
+      </Box>
     </Box>
   );
 };

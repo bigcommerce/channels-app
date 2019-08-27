@@ -7,58 +7,50 @@ import {
   Box,
   Flex,
   H1,
-  Checkbox
+  Checkbox,
+  ProgressCircle
 } from "@bigcommerce/big-design";
 
 import { Loader } from "../../components/base/Loader";
 
-import { Channel } from "../../models/Channel";
-import { ChannelsAPI } from "../../api";
+import { useChannelContext } from "../../contexts/ChannelContext";
+
 import { useMemo } from "react";
 
-interface ChannelDetailViewProps {
-  channel: Channel;
-  isLoading: boolean;
-  saveAction: Function;
-}
-
-export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
+export const ChannelDetailView: React.FC = () => {
   const [editEnabled, setEditEnabled] = React.useState(false);
 
   const [enabled, setEnabled] = React.useState();
   const [name, setName] = React.useState();
   const [externalId, setExternalId] = React.useState();
 
+  const channelContext = useChannelContext();
+
   useMemo(() => {
-    if (props.channel) {
-      setEnabled(props.channel.is_enabled);
-      setName(props.channel.name);
-      setExternalId(props.channel.external_id);
+    if (channelContext.channel) {
+      setEnabled(channelContext.channel.is_enabled);
+      setName(channelContext.channel.name);
+      setExternalId(channelContext.channel.external_id);
     }
-  }, [props.channel]);
+  }, [channelContext.channel]);
 
   const enableEdit = () => {
     setEditEnabled(true);
   };
 
   const cancelEdit = () => {
-    setEnabled(props.channel.is_enabled);
-    setName(props.channel.name);
-    setExternalId(props.channel.external_id);
+    if (channelContext.channel) {
+      setEnabled(channelContext.channel.is_enabled);
+      setName(channelContext.channel.name);
+      setExternalId(channelContext.channel.external_id);
+    }
 
     setEditEnabled(false);
   };
 
   const saveEdit = async () => {
     try {
-      await ChannelsAPI.updateChannel(
-        props.channel.id,
-        name,
-        externalId,
-        enabled
-      );
-
-      props.saveAction(true);
+      await channelContext.updateChannel(name, externalId, enabled);
 
       setEditEnabled(false);
     } catch (err) {
@@ -79,10 +71,25 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
           <Box>
             {editEnabled ? (
               <Box>
-                <Button margin="small" variant="secondary" onClick={cancelEdit}>
-                  Cancel
+                {!channelContext.isChannelLoading ? (
+                  <Button
+                    margin="small"
+                    variant="secondary"
+                    onClick={cancelEdit}
+                    disabled={channelContext.isChannelLoading}
+                  >
+                    Cancel
+                  </Button>
+                ) : (
+                  ""
+                )}
+                <Button onClick={saveEdit}>
+                  {channelContext.isChannelLoading ? (
+                    <ProgressCircle size={"xSmall"} />
+                  ) : (
+                    "Save"
+                  )}
                 </Button>
-                <Button onClick={saveEdit}>Save</Button>
               </Box>
             ) : (
               <Button variant="secondary" onClick={enableEdit}>
@@ -92,9 +99,8 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
           </Box>
         </Flex.Item>
       </Flex>
-
-      {props.isLoading ? <Loader height="250px" /> : ""}
-      {!props.isLoading && props.channel ? (
+      {channelContext.isChannelLoading ? <Loader height="250px" /> : ""}
+      {!channelContext.isChannelLoading && channelContext.channel ? (
         <Form>
           <Form.Fieldset>
             <Form.Group>
@@ -108,15 +114,23 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
             <Form.Group>
               <Input
                 label="Channel Platform"
-                value={props.channel.platform}
+                value={channelContext.channel.platform}
                 disabled
               />
             </Form.Group>
             <Form.Group>
-              <Input label="Channel Type" value={props.channel.type} disabled />
+              <Input
+                label="Channel Type"
+                value={channelContext.channel.type}
+                disabled
+              />
             </Form.Group>
             <Form.Group>
-              <Input label="Channel Id" value={props.channel.id} disabled />
+              <Input
+                label="Channel Id"
+                value={channelContext.channel.id}
+                disabled
+              />
               <Input
                 label="External Id"
                 value={externalId}
@@ -139,12 +153,12 @@ export const ChannelDetailView: React.FC<ChannelDetailViewProps> = props => {
             <Form.Group>
               <Input
                 label="Created At"
-                value={props.channel.date_created}
+                value={channelContext.channel.date_created}
                 disabled
               />
               <Input
                 label="Modified At"
-                value={props.channel.date_modified}
+                value={channelContext.channel.date_modified}
                 disabled
               />
             </Form.Group>
