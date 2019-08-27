@@ -17,7 +17,6 @@ export const ChannelListPage: React.FC = () => {
 
   const {
     data: sitesData,
-    error: sitesError,
     isLoading: isSitesLoading,
     reload: sitesReload
   } = useAsync({

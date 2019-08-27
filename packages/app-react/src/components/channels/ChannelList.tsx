@@ -66,7 +66,7 @@ export const ChannelList: React.FC<ChannelListProperties> = props => {
         >
           <Flex justifyContent="center" alignItems="center">
             <Flex.Item margin="small">
-              <img height="24" src={logo} alt="Storefront Channel Logo Image" />
+              <img height="24" src={logo} alt="Storefront Channel Logo" />
             </Flex.Item>
             <Flex.Item
               margin="small"

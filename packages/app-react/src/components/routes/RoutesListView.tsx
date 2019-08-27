@@ -1,12 +1,6 @@
 import * as React from "react";
 
-import {
-  Box,
-  Flex,
-  H1,
-  Button,
-  H4
-} from "@bigcommerce/big-design";
+import { Box, Flex, H1, Button, H4 } from "@bigcommerce/big-design";
 
 import { AddIcon } from "@bigcommerce/big-design-icons";
 
@@ -49,6 +43,8 @@ export const RoutesListView: React.FC = props => {
               route={route}
             />
           );
+        } else {
+          return;
         }
       });
     }

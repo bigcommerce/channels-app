@@ -6,36 +6,24 @@ import {
   Box,
   Flex,
   H1,
-  Link,
-  Text,
   Button,
   Form,
   Input,
   ProgressCircle,
-  Dropdown
 } from "@bigcommerce/big-design";
 
 import { Loader } from "../../components/base/Loader";
-import { Site } from "../../models/Site";
-import { SitesAPI } from "../../api";
 
 import { SiteCreateModal } from "./SiteCreateModal";
-import { SiteDeleteModal } from "./SiteDeleteModal";
 
 import { useChannelContext } from "../../contexts/ChannelContext";
-import { MoreHorizIcon } from "@bigcommerce/big-design-icons";
 
-interface SiteViewProps {
-  saveAction: Function;
-}
-
-export const SiteView: React.FC<SiteViewProps> = props => {
+export const SiteView: React.FC = () => {
   const [editEnabled, setEditEnabled] = React.useState(false);
 
   const [url, setUrl] = React.useState();
 
   const [isCreateOpen, setCreateOpen] = React.useState(false);
-  const [isDeleteOpen, setDeleteOpen] = React.useState(false);
 
   const channelContext = useChannelContext();
 
@@ -64,19 +52,8 @@ export const SiteView: React.FC<SiteViewProps> = props => {
     }
   };
 
-  const createChannel = async (actionTaken: boolean) => {
-    props.saveAction(actionTaken);
+  const createSite = async () => {
     setCreateOpen(false);
-  };
-
-  const cancelDelete = () => {
-    setDeleteOpen(false);
-  };
-
-  const applyDelete = () => {
-    channelContext.deleteSite();
-
-    setDeleteOpen(false);
   };
 
   return (
@@ -176,7 +153,7 @@ export const SiteView: React.FC<SiteViewProps> = props => {
         <SiteCreateModal
           channelId={12}
           isOpen={isCreateOpen}
-          closeAction={createChannel}
+          closeAction={createSite}
         />
       </Box>
     </Box>
