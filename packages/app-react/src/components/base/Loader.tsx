@@ -15,7 +15,7 @@ export const Loader: React.FC<LoaderProps> = props => {
         alignItems="center"
       >
         <Flex.Item>
-          <ProgressCircle size="large"/>
+          <ProgressCircle size="large" />
         </Flex.Item>
       </Flex>
     </Box>

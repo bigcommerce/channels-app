@@ -3,12 +3,8 @@ import * as React from "react";
 import {
   Box,
   Flex,
-  H1,
   Button,
-  Panel,
-  H2,
   Link,
-  H4,
   Dropdown,
   Text,
   Input,
@@ -16,12 +12,9 @@ import {
   Select
 } from "@bigcommerce/big-design";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
+import { AddIcon, MoreHorizIcon } from "@bigcommerce/big-design-icons";
 
 import { Route, RouteTypeSelections, SelectOption } from "../../models/Route";
-
-import { Loader } from "../base/Loader";
 
 import { RouteDeleteModal } from "./RouteDeleteModal";
 import { RoutesAPI } from "../../api";
@@ -161,7 +154,7 @@ export const RouteListElement: React.FC<RoutesListElementProps> = props => {
               <Dropdown
                 trigger={
                   <Button variant="secondary">
-                    <FontAwesomeIcon icon={faEllipsisH} />
+                    <MoreHorizIcon />
                   </Button>
                 }
                 placement="auto-start"

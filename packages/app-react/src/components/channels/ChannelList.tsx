@@ -10,9 +10,7 @@ import {
   Link
 } from "@bigcommerce/big-design";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
-import { OpenInNewIcon } from "@bigcommerce/big-design-icons";
+import { OpenInNewIcon, MoreHorizIcon } from "@bigcommerce/big-design-icons";
 
 import { Channel } from "../../models/Channel";
 
@@ -108,7 +106,7 @@ export const ChannelList: React.FC<ChannelListProperties> = props => {
                 }}
               >
                 <Button variant="secondary">
-                  <FontAwesomeIcon icon={faEllipsisH} />
+                  <MoreHorizIcon />
                 </Button>
               </RouterLink>
             </Flex.Item>

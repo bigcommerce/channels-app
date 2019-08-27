@@ -8,21 +8,13 @@ import {
   Form,
   Input,
   Box,
-  Select,
   ProgressCircle
 } from "@bigcommerce/big-design";
-import { RoutesAPI, SitesAPI } from "../../api";
-import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 
 interface SiteCreateModalProperties {
   channelId: number;
   isOpen: boolean;
   closeAction: Function;
-}
-
-interface SelectOption {
-  value: string;
-  label: string;
 }
 
 export const SiteCreateModal: React.FC<SiteCreateModalProperties> = props => {
