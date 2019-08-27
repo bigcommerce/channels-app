@@ -31,3 +31,7 @@ export async function updateSite(bigCommerceClient, siteId: number, url: string)
     
     return bigCommerceClient.put(`/sites/${siteId}`, requestPayload)
 }
+
+export async function deleteSite(bigCommerceClient, siteId: number) {
+    return bigCommerceClient.delete(`/sites/${siteId}`)
+}

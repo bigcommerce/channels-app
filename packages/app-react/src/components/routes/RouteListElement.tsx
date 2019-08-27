@@ -12,7 +12,7 @@ import {
   Select
 } from "@bigcommerce/big-design";
 
-import { AddIcon, MoreHorizIcon } from "@bigcommerce/big-design-icons";
+import { MoreHorizIcon } from "@bigcommerce/big-design-icons";
 
 import { Route, RouteTypeSelections, SelectOption } from "../../models/Route";
 
