@@ -26,6 +26,21 @@ export async function RootHandler(event, bigCommerce) {
     };
   }
 
+  if (event.httpMethod === "DELETE") {
+    console.log("asdfasdf");
+    console.log(event.queryStringParameters.site_id);
+
+    const data = await siteRepo.deleteSite(
+      bigCommerce,
+      event.queryStringParameters.site_id
+    );
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(data)
+    };
+  }
+
   return {
     statusCode: 404,
     body: "Method Not Supported"
@@ -64,4 +79,18 @@ export async function SiteHandler(event, bigCommerce) {
     statusCode: 404,
     body: "Method Not Supported"
   };
+}
+
+export async function ChannelHandler(event, bigCommerce) {
+  if (event.httpMethod === "GET") {
+    const data = await siteRepo.fetchSiteByChannel(
+      bigCommerce,
+      event.queryStringParameters.channel_id
+    );
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(data)
+    };
+  }
 }

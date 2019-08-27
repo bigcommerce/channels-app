@@ -1,9 +1,7 @@
 import * as BigCommerce from "node-bigcommerce";
 
-import { repository as siteRepo } from "./bigcommerce/sites";
-
 import { auth } from "./auth";
-import { handlers } from "./bigcommerce/sites";
+import { handlers } from "./bigcommerce/routes";
 
 exports.handler = async (event, context, callback) => {
   try {
@@ -22,11 +20,8 @@ exports.handler = async (event, context, callback) => {
       case "/":
         return handlers.RootHandler(event, bigCommerce);
 
-      case "/site":
-        return handlers.SiteHandler(event, bigCommerce);
-        
-      case "/channel":
-          return handlers.ChannelHandler(event, bigCommerce);
+      case "/routes":
+        return handlers.RoutesHandler(event, bigCommerce);
     }
   } catch (err) {
     console.log(`Error: ${JSON.stringify(err)}`);
