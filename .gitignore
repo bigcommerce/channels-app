@@ -1,3 +1,5 @@
 node_modules
 .runtimeconfig.json
 ngrok.yml
+./netlify
+yarn-error.log

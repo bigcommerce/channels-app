@@ -1,52 +1,38 @@
 import * as React from "react";
 
-import axios from "axios";
-import useAxios from "axios-hooks";
+import { useAsync } from "react-async";
 
-import {
-  Box,
-  Flex,
-  H1,
-  Button,
-} from "@bigcommerce/big-design";
+import { Box, Flex, H1, Button } from "@bigcommerce/big-design";
+import { AddIcon } from "@bigcommerce/big-design-icons";
 
-import { AddIcon } from '@bigcommerce/big-design-icons';
-
-import { Loader } from "../components/base/Loader";
-import { Error } from "../components/base/Error";
-
+import { ChannelsAPI, SitesAPI } from "../api";
 import { ChannelList } from "../components/channels/ChannelList";
 import { ChannelCreateModal } from "../components/channels/ChannelCreateModal";
-import { useContext } from "react";
-import { ChannelsContext } from "../components/base/ChannelContext";
 
 export const ChannelListPage: React.FC = () => {
-
-  // TODO Move to API Layer
-  const [{ data, loading, error }, refetch] = useAxios({
-    url: "https://focused-torvalds-8d8f01.netlify.com/.netlify/functions/bigcommerce_channels/",
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Content-Type": "application/json"
-    }
+  const { data, error, isLoading, reload } = useAsync({
+    promiseFn: ChannelsAPI.fetchAllChannels
   });
 
-  const channelsContext = useContext(ChannelsContext)
+  const {
+    data: sitesData,
+    error: sitesError,
+    isLoading: isSitesLoading,
+    reload: sitesReload
+  } = useAsync({
+    promiseFn: SitesAPI.fetchAllSites
+  });
+
   const [isCreateChannelOpen, setCreateChannelOpen] = React.useState(false);
 
   const closeCreate = (actionTaken: boolean) => {
     if (actionTaken) {
-      refetch()
+      reload();
+      sitesReload();
     }
 
     setCreateChannelOpen(false);
   };
-
-
-  React.useEffect(() => {
-    refetch()
-    channelsContext.clear()
-  }, [])
 
   return (
     <Box marginVertical="xxLarge" marginHorizontal="xxxLarge">
@@ -59,20 +45,41 @@ export const ChannelListPage: React.FC = () => {
         <Flex.Item>
           <Box>
             <Button
-              // disabled={loading && !error}
+              disabled={isLoading && !error}
               onClick={() => {
                 setCreateChannelOpen(true);
               }}
             >
               <AddIcon /> Create Channel
-                  </Button>
+            </Button>
           </Box>
         </Flex.Item>
       </Flex>
 
-      {loading ? <Loader height="40vh"/> : ""}
-      {error ? <Error message="Error Fetching Data" /> : ""}
-      {data && !loading ? <ChannelList /> : ""}
+      {data && !isLoading ? (
+        sitesData && !isSitesLoading ? (
+          <ChannelList
+            isChannelsLoading={isLoading}
+            isSitesLoading={isSitesLoading}
+            channels={data.data}
+            sites={sitesData.data.length > 0 ? sitesData.data : []}
+          />
+        ) : (
+          <ChannelList
+            isChannelsLoading={isLoading}
+            isSitesLoading={isSitesLoading}
+            channels={data.data}
+            sites={[]}
+          />
+        )
+      ) : (
+        <ChannelList
+          isChannelsLoading={isLoading}
+          isSitesLoading={isSitesLoading}
+          channels={[]}
+          sites={[]}
+        />
+      )}
 
       <ChannelCreateModal
         isOpen={isCreateChannelOpen}

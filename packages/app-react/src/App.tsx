@@ -7,7 +7,6 @@ import { ChannelListPage } from "./pages/ChannelListPage";
 import { ChannelDetailPage } from "./pages/ChannelDetailPage";
 import { spring, AnimatedSwitch } from "react-router-transition";
 import { Box } from "@bigcommerce/big-design";
-import { ChannelsContextProvider } from "./components/base/ChannelContext";
 
 // we need to map the `scale` prop we define below
 // to the transform style property
@@ -44,8 +43,9 @@ const bounceTransition = {
 
 const App: React.FC = () => {
   return (
-    <ChannelsContextProvider>
-    <Box style={{maxWidth: '1200px', marginLeft: 'auto', marginRight: 'auto'}}>
+    <Box
+      style={{ maxWidth: "1200px", marginLeft: "auto", marginRight: "auto" }}
+    >
       <Router>
         <AnimatedSwitch
           atEnter={bounceTransition.atEnter}
@@ -59,8 +59,6 @@ const App: React.FC = () => {
         </AnimatedSwitch>
       </Router>
     </Box>
-    </ChannelsContextProvider>
-
   );
 };
 

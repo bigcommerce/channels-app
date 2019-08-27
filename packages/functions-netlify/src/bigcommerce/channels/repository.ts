@@ -22,13 +22,15 @@ export function createChannel(bigCommerceClient, externalId: string, isEnabled: 
 }
 
 export function updateChannel(bigCommerceClient, channelId: string, channelName: string, externalId: string, isEnabled: boolean) {
-
     console.log(isEnabled)
     const requestPayload: ChannelPostRequestPayload = {
         external_id: externalId,
         is_enabled: isEnabled,
         name: channelName
     }
+
+    console.log(JSON.stringify(requestPayload))
+    console.log(channelId)
 
     return bigCommerceClient.put(`/channels/${channelId}`, requestPayload)
 }
