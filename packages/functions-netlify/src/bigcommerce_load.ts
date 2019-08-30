@@ -34,7 +34,7 @@ exports.handler = async (event, context, callback) => {
                 statusCode: 302,
                 headers: {
                     'Access-Control-Allow-Origin': '*',
-                    'Location': "https://channelsappdev.ngrok.io/"
+                    'Location': process.env.URL
                 },
                 body: ""
             }
@@ -45,7 +45,7 @@ exports.handler = async (event, context, callback) => {
                     'Access-Control-Allow-Origin': '*',
                     'Cache-Control': 'no-cache',
                     'Set-Cookie': auth.generateCookie(storeData.store_hash, storeData.access_token),
-                    'Location': "https://channelsappdev.ngrok.io/"
+                    'Location': process.env.URL
                 },
                 body: ""
             }
