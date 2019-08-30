@@ -13,7 +13,6 @@
     "netlify:dev": "netlify dev"
   },
   "dependencies": {
-    "faunadb": "^2.8.0",
     "lerna": "^3.16.4",
     "yarn": "^1.17.3"
   }
