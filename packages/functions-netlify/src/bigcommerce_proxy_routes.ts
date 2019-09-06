@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 import * as BigCommerce from "node-bigcommerce";
 
 import { auth } from "./auth";

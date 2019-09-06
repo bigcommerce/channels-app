@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 import faunadb from 'faunadb'
 
 import * as BigCommerce from "node-bigcommerce"

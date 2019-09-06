@@ -1,4 +1,4 @@
-const util = require("util");
+require('dotenv').config()
 
 import faunadb from 'faunadb'
 

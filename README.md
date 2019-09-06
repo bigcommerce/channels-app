@@ -13,7 +13,7 @@ It can be installed on a BC storefront via insert-url [url].
 
 To get the app running locally:
 
-# Setup Project
+### Setup Project
 
 Sign Up for netlify: https://app.netlify.com/signup
 
@@ -33,7 +33,7 @@ netlify addons:create fauna
 netlify addons:auth fauna
 ```
 
-# Setup FaunaDB DB and Index
+### Setup FaunaDB DB and Index
 
 - Log into FaunaDB and go to the collection that was created from netlify
 - Create a collection named `bigcommerce_stores`
@@ -44,14 +44,15 @@ netlify addons:auth fauna
 
 ![Create Index Image](./instructions/create_index.png)
 
-# Setup ngrok tunnel for app
+### Setup ngrok tunnel for app
 
 - Copy `ngrok-sample.yml` to `ngrok.yml`
 - Retrieve and replace the auth token in the `ngrok.yml` file
 
+- Set `authtoken` in `ngrok.yml` file with value from https://dashboard.ngrok.com/get-started
 - Set hostname to `<username>_channelsdevapp.ngrok.io` in the `ngrok.yml` file.
 
-# Setup BC App
+### Setup BC App
 
 - Log into: https://devtools.bigcommerce.com/my/apps
 
@@ -60,7 +61,7 @@ netlify addons:auth fauna
   - Load Callback URL: `<username>_channelsdevapp.ngrok.io/.netlify/functions/bigcommerce_load`
   - Uninstall Callback URL: `<username>_channelsdevapp.ngrok.io/.netlify/functions/bigcommerce_uninstall`
 
-# Setup .env
+### Setup .env
 
 Copy `.env_sample` to `.env`
 
@@ -72,7 +73,9 @@ You will need to update and replace the following in `.env`
 - BC_AUTH_CALLBACK: Replace with Auth Callback URL from above
 - APP_URL= Replace with ngrok hostname from above `https://<username>_channelsappdev.ngrok.io/`
 
-# Start Service
+Note: The environment variables in `.env` will also need to be set in Netlify in order for the deployed version to work. [TODO]
+
+### Start Service
 
 In a terminal execute in the root of the project directory to start ngrok: 
 
@@ -83,8 +86,6 @@ ngrok start --config ngrok.yml site
 In another terminal execute in the root of the project directory to start the service: 
 
 ```bash
-source .env
-
 yarn netlify:dev
 ```
 

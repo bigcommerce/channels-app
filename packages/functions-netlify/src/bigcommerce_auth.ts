@@ -1,4 +1,4 @@
-const util = require("util");
+require('dotenv').config()
 
 import faunadb from 'faunadb'
 
@@ -21,6 +21,8 @@ const bigCommerce = new BigCommerce({
 });
 
 exports.handler = async (event, context, callback) => {
+    console.info("Bang")
+    console.info(process.env.BC_CLIENT_ID)
     try {
         const authorizationData: interfaces.AuthResponse = await bigCommerce.authorize(event.queryStringParameters)
 

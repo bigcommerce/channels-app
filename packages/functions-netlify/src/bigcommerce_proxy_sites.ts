@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 import * as BigCommerce from "node-bigcommerce";
 
 import { auth } from "./auth";
@@ -22,9 +24,9 @@ exports.handler = async (event, context, callback) => {
 
       case "/site":
         return handlers.SiteHandler(event, bigCommerce);
-        
+
       case "/channel":
-          return handlers.ChannelHandler(event, bigCommerce);
+        return handlers.ChannelHandler(event, bigCommerce);
     }
   } catch (err) {
     console.log(`Error: ${JSON.stringify(err)}`);
