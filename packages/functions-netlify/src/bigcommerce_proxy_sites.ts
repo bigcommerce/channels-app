@@ -1,7 +1,5 @@
 import * as BigCommerce from "node-bigcommerce";
 
-import { repository as siteRepo } from "./bigcommerce/sites";
-
 import { auth } from "./auth";
 import { handlers } from "./bigcommerce/sites";
 

@@ -6,22 +6,19 @@ import { repository } from "./bigcommerce/app"
 import { auth } from './auth';
 
 const faunadbClient = new faunadb.Client({
-    secret: process.env.FN_BC_AUTH_FAUNADB
+    secret: process.env.FAUNADB_SERVER_SECRET
 })
 
 const bigCommerce = new BigCommerce({
     logLevel: "debug",
     clientId: process.env.BC_CLIENT_ID,
     secret: process.env.BC_CLIENT_SECRET,
-    callback: process.env.BC_CALLBACK,
+    callback: process.env.BC_AUTH_CALLBACK,
     responseType: "json",
     apiVersion: "v3"
 });
 
 exports.handler = async (event, context, callback) => {
-    console.log(process.env.URL)
-
-
     try {
         const payload = bigCommerce.verify(event.queryStringParameters.signed_payload)
        
@@ -34,7 +31,7 @@ exports.handler = async (event, context, callback) => {
                 statusCode: 302,
                 headers: {
                     'Access-Control-Allow-Origin': '*',
-                    'Location': process.env.URL
+                    'Location': process.env.APP_URL
                 },
                 body: ""
             }
@@ -45,7 +42,7 @@ exports.handler = async (event, context, callback) => {
                     'Access-Control-Allow-Origin': '*',
                     'Cache-Control': 'no-cache',
                     'Set-Cookie': auth.generateCookie(storeData.store_hash, storeData.access_token),
-                    'Location': process.env.URL
+                    'Location': process.env.APP_URL
                 },
                 body: ""
             }
