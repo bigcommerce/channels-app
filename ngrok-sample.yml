@@ -1,0 +1,6 @@
+authtoken: <Replace with Auth Token from https://dashboard.ngrok.com/get-started>
+tunnels:
+  site:
+    addr: 8888
+    proto: http
+    hostname: <replace with username>_channelsdevapp.ngrok.io

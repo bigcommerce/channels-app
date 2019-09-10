@@ -1,4 +1,4 @@
-const util = require("util");
+require('dotenv').config()
 
 import faunadb from 'faunadb'
 
@@ -9,14 +9,14 @@ import { repository, interfaces } from "./bigcommerce/app"
 
 const q = faunadb.query
 const faunadbClient = new faunadb.Client({
-    secret: process.env.FN_BC_AUTH_FAUNADB
+    secret: process.env.FAUNADB_SERVER_SECRET
 })
 
 const bigCommerce = new BigCommerce({
     logLevel: "debug",
     clientId: process.env.BC_CLIENT_ID,
     secret: process.env.BC_CLIENT_SECRET,
-    callback: process.env.BC_CALLBACK,
+    callback: process.env.BC_AUTH_CALLBACK,
     responseType: "json",
     apiVersion: "v3"
 });

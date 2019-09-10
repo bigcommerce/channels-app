@@ -1,6 +1,6 @@
-import * as BigCommerce from "node-bigcommerce";
+require("dotenv").config();
 
-import { repository as siteRepo } from "./bigcommerce/sites";
+import * as BigCommerce from "node-bigcommerce";
 
 import { auth } from "./auth";
 import { handlers } from "./bigcommerce/sites";
@@ -24,9 +24,9 @@ exports.handler = async (event, context, callback) => {
 
       case "/site":
         return handlers.SiteHandler(event, bigCommerce);
-        
+
       case "/channel":
-          return handlers.ChannelHandler(event, bigCommerce);
+        return handlers.ChannelHandler(event, bigCommerce);
     }
   } catch (err) {
     console.log(`Error: ${JSON.stringify(err)}`);

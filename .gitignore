@@ -3,3 +3,4 @@ node_modules
 ngrok.yml
 ./netlify
 yarn-error.log
+.env
