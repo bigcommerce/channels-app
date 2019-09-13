@@ -7,87 +7,108 @@ The Channels App serves two main purposes, as:
 	- BigDesign React Components
  -	A way to manage the channels connected to a BC storefront and their corresponding sites and routes
 
-## Installation
+## App Installation
 
-It can be installed on a BC storefront via insert-url [url].
+It can be installed on a BC storefront [here](https://apps.bigcommerce.com/details/18212).
 
-To get the app running locally:
+## Local Development & Testing
+
+To get the app running locally, you'll need the following dependencies:
+
+ - A BigCommerce Store: you can sign up for a trial [here](https://www.bigcommerce.com/essentials/) or use an existing store / sandbox store
+ - Create API credentials: you can find instructions [here](https://developer.bigcommerce.com/api-docs/getting-started/authentication#authentication_getting-api-credentials)
+ - A Netlify account: Sign Up for netlify [here](https://app.netlify.com/signup)
+ - ngrok: You can install using homebrew `brew cask install ngrok`
 
 ### Setup Project
 
-Sign Up for netlify: https://app.netlify.com/signup
+Run the following commands:
 
-```bash
-npm install netlify-cli -g
-```
+ 1. `npm install netlify-cli -g`
 
-```bash
-netlify init
-```
+ 2. `netlify init`
 
-```bash
-netlify addons:create fauna
-```
+	Notes:  
 
-```bash
-netlify addons:auth fauna
-```
+	 - You can use most of the specified defaults when prompted
+	 - Build command should be `yarn build`
+	 - Directory should be `packages/app-react/build`
+
+ 3. `netlify addons:create fauna`
+
+ 4. `netlify addons:auth fauna`
+
+	 Notes:
+
+	  - You need to agree to import the database
+	  - It is recommended to rename the database to <username>-channels-app
 
 ### Setup FaunaDB DB and Index
 
-- Log into FaunaDB and go to the collection that was created from netlify
-- Create a collection named `bigcommerce_stores`
+ 1. Log into FaunaDB and go to the db that was created from netlify
+ 2. Create a collection named `bigcommerce_stores` using defaults. To create a collection, click on the name of the database
 
 ![Create Collection Image](./instructions/create_collection.png)
 
-- Create Index `store_hash` in `bigcommerce_stores`
+ 3. Create Index `store_hash` in `bigcommerce_stores`
 
 ![Create Index Image](./instructions/create_index.png)
 
+	 Notes:
+
+	  - Make sure to add data.store_hash to both terms and values
+	  - Select the unique checkbox
+
 ### Setup ngrok tunnel for app
 
-- Copy `ngrok-sample.yml` to `ngrok.yml`
-- Retrieve and replace the auth token in the `ngrok.yml` file
+ 1. `cp ngrok-sample.yml ngrok.yml` 
+ 2. Retrieve and replace the auth token in the `ngrok.yml` file
+ 3. Set `authtoken` in `ngrok.yml` file with value from https://dashboard.ngrok.com/get-started
+ 4. Set hostname to `<username>_channelsdevapp.ngrok.io` in the `ngrok.yml` file.
 
-- Set `authtoken` in `ngrok.yml` file with value from https://dashboard.ngrok.com/get-started
-- Set hostname to `<username>_channelsdevapp.ngrok.io` in the `ngrok.yml` file.
+	 Notes: 
+
+	  - The username can be whatever you like
 
 ### Setup BC App
 
-- Log into: https://devtools.bigcommerce.com/my/apps
+ 1. Log into your store's [dev tools](https://devtools.bigcommerce.com/my/apps)
+ 2. Create an app and in the "Technical" section, set the following URLs:
 
-- Create an app and use the following for the URLS:
-  - Auth Callback URL: `<username>_channelsdevapp.ngrok.io/.netlify/functions/bigcommerce_auth`
-  - Load Callback URL: `<username>_channelsdevapp.ngrok.io/.netlify/functions/bigcommerce_load`
-  - Uninstall Callback URL: `<username>_channelsdevapp.ngrok.io/.netlify/functions/bigcommerce_uninstall`
+	  - Auth Callback URL: `https://<username>channelsdevapp.ngrok.io/.netlify/functions/bigcommerce_auth`
+	  - Load Callback URL: `https://<username>channelsdevapp.ngrok.io/.netlify/functions/bigcommerce_load`
+	  - Uninstall Callback URL: `https://<username>channelsdevapp.ngrok.io/.netlify/functions/bigcommerce_uninstall`
+
+ 3. Select "modify" permissions for the following scopes:
+
+	  - Channel Settings
+	  - Sites & Routes
 
 ### Setup .env
 
-Copy `.env_sample` to `.env`
+ 1. `cp .env-sample .env`
 
-You will need to update and replace the following in `.env`
+ 2. Update and replace the following in `.env`:
 
-- BC_CLIENT_ID: BigCommerce App Client Id
-- BC_CLIENT_SECRET: BigCommerce App Secret
+	- BC_CLIENT_ID: BigCommerce App Client Id
+	- BC_CLIENT_SECRET: BigCommerce App Secret
 
-- BC_AUTH_CALLBACK: Replace with Auth Callback URL from above
-- APP_URL= Replace with ngrok hostname from above `https://<username>_channelsappdev.ngrok.io/`
+	- BC_AUTH_CALLBACK: Replace with Auth Callback URL from above
+	- APP_URL= Replace with ngrok hostname from above `https://<username>_channelsappdev.ngrok.io/`
 
 Note: The environment variables in `.env` will also need to be set in Netlify in order for the deployed version to work. [TODO]
 
 ### Start Service
 
-In a terminal execute in the root of the project directory to start ngrok: 
+In a terminal, execute the following in the root of the project directory to start ngrok: 
 
-```bash
-ngrok start --config ngrok.yml site
-```
+`ngrok start --config ngrok.yml site`
+
+*Note*: if you stop and restart this process, it will give you a new host domain that you will need to update for each of the 3 Callback URLs in your app's dev tools section
 
 In another terminal execute in the root of the project directory to start the service: 
 
-```bash
-yarn netlify:dev
-```
+`yarn netlify:dev`
 
 The service will live reload on saved changes.  If you want to restart simply stop the `yarn netlify:dev` process and restart it, 
 there should be no need to restart ngrok.
