@@ -1,6 +1,7 @@
 {
   "name": "channels-app",
   "version": "1.0.0",
+  "license": "MIT",
   "repository": "git@github.com:bigcommerce/channels-app.git",
   "author": "bc-ncheikh <nabil.cheikh@bigcommerce.com>",
   "private": true,
