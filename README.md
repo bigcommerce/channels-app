@@ -64,7 +64,7 @@ Run the following commands:
  1. `cp ngrok-sample.yml ngrok.yml` 
  2. Retrieve and replace the auth token in the `ngrok.yml` file
  3. Set `authtoken` in `ngrok.yml` file with value from https://dashboard.ngrok.com/get-started
- 4. Set hostname to `<username>_channelsdevapp.ngrok.io` in the `ngrok.yml` file.
+ 4. Set hostname to `<username>channelsdevapp.ngrok.io` in the `ngrok.yml` file.
 
 	 Notes: 
 
