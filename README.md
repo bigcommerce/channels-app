@@ -41,8 +41,7 @@ Run the following commands:
 	 Notes:
 
 	  - You need to agree to import the database
-	  - It is recommended to rename the database to <username>-channels-app
-
+	  
 ### Setup FaunaDB DB and Index
 
  1. Log into FaunaDB and go to the db that was created from netlify
