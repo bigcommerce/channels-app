@@ -4,3 +4,6 @@ ngrok.yml
 ./netlify
 yarn-error.log
 .env
+
+# Local Netlify folder
+.netlify
