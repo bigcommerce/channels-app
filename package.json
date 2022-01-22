@@ -14,7 +14,7 @@
     "netlify:dev": "netlify dev"
   },
   "dependencies": {
-    "lerna": "^3.16.4",
+    "lerna": "^3.22.1",
     "yarn": "^1.17.3"
   }
 }
