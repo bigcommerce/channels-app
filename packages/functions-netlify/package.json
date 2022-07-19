@@ -13,7 +13,7 @@
     "@types/node": "^12.7.1",
     "axios": "^0.19.0",
     "babel-core": "^6.26.3",
-    "cookie": "^0.4.0",
+    "cookie": "^0.5.0",
     "dotenv": "^8.1.0",
     "faunadb": "^2.7.0",
     "jsonwebtoken": "^8.5.1",
